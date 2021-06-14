@@ -55,8 +55,7 @@ public class typingTutor implements KeyListener {
 		if(arg0.getKeyChar()== currentLetter) {
 			System.out.println("Correct!");
 		}
-		keyReleased(arg0);
-		System.out.println("You pressed: "+currentLetter);
+		System.out.println("You pressed: "+arg0.getKeyChar());
 		
 	}
 
@@ -67,7 +66,7 @@ public class typingTutor implements KeyListener {
 	@Override
 	public void keyReleased(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-		generateRandomLetter();
+		currentLetter = generateRandomLetter();
 		label.setText(""+currentLetter);
 	}
 
