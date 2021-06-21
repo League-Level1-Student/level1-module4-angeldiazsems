@@ -5,7 +5,7 @@ public class CalculatorRunner {
 		
 Calculator calc = new Calculator();
  calc.setup();
- calc.addition(5,7);
+ 
 
 }
 }
