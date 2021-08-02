@@ -1,20 +1,25 @@
 package _11_whack_a_mole;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class whackAMole implements ActionListener {
 	JFrame frame = new JFrame();
 	JPanel panel = new JPanel();
 	Random ran = new Random();
+	Date date = new Date();
 	JButton button;
-	int molesWhacked;
+	int molesWhacked = 0;
+	int molesMissed = 0;
 	
 	void drawButtons(Random ran) {
 		int ranNum = ran.nextInt(25);
@@ -23,6 +28,7 @@ public class whackAMole implements ActionListener {
 			button.addActionListener(this);
 			panel.add(button);
 			if (i == ranNum) {
+				this.button = button;
 				button.setText("mole!");
 			}
 		}
@@ -34,41 +40,48 @@ public class whackAMole implements ActionListener {
 		frame.setSize(500, 500);
 		panel.setLayout(new GridLayout(5, 5));
 		drawButtons(ran);
-
+	
+		
+		
 	}
 
-	static void speak(String words) {
-		if (System.getProperty("os.name").contains("Windows")) {
-			String cmd = "PowerShell -Command \"Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak('"
-					+ words + "');\"";
-			try {
-				Runtime.getRuntime().exec(cmd).waitFor();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-		} else {
-			try {
-				Runtime.getRuntime().exec("say " + words).waitFor();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+	private void endGame(Date timeAtStart, int molesWhacked) { 
+	    Date timeAtEnd = new Date();
+	    JOptionPane.showMessageDialog(null, "Your whack rate is "
+	            + ((timeAtEnd.getTime() - timeAtStart.getTime()) / 1000.00 / molesWhacked)
+	                  + " moles per second.");
 	}
+	
+	
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODOd Auto-generated method stub
 		String buttonText = button.getText();
 		
-		if(arg0.getSource().equals(button)&&buttonText==("mole!")) {
-		molesWhacked++;
+		if(arg0.getSource().equals(button)&&buttonText .equals("mole!")) {
+			JOptionPane.showMessageDialog(null, "you got the mole");
+			molesWhacked++;
+			if(molesWhacked == 10) {
+				endGame(date, molesWhacked);
+			}	
 		}
 		else {
-			speak("test");
+			JOptionPane.showMessageDialog(null, "you missed the mole");
+			molesMissed++;
+			if(molesMissed == 5) {
+				endGame(date, molesWhacked);
+			}	
 		}
-		frame.dispose();
+		frame.remove(panel);
+		panel = new JPanel();
 		drawButtons(ran);
+		frame.add(panel);
+		panel.setLayout(new GridLayout(5, 5));
+		panel.setPreferredSize(new Dimension(500,500));
+		frame.pack();
+		
+		
 	}
 
 }
